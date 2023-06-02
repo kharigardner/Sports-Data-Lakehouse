@@ -1,0 +1,9 @@
+requests==2.31.0
+pytest==7.3.1
+pytest-cov==4.1.0
+python-dateutil==2.8.2
+boto3==1.26.145
+pandas==2.0.2
+nfl_data-py==0.3.0
+apache-airflow-providers-amazon==8.1.0
+pytest-mock
