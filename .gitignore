@@ -1,0 +1,14 @@
+*.code-workspace
+__pycache__
+*.vscode
+*.pytest_cache
+*.mypy_cache
+
+*.tfvars
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+*.tfstate.backup
+
+# JVM shit
+.metals
