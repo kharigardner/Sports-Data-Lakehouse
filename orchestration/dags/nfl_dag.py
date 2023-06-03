@@ -4,6 +4,7 @@ from tasks.nfl import functions as nfl_func
 
 from airflow.decorators import dag, task
 from airflow.operators.python import PythonOperator
+from airflow.models.param import Param
 
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 import logging
@@ -26,7 +27,8 @@ default_args = {
     tags=['nfl'],
     dagrun_timeout=timedelta(minutes=60),
     max_active_runs=1,
-    params={'year': datetime.now().year}
+    params={'year': Param(default=2021, type="integer")},
+    render_template_as_native_obj=True
 )
 def nfl_dag():
     

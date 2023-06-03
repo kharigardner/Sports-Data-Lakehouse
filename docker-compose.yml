@@ -1,7 +1,30 @@
 services:
+
   airflow:
-    build: ./airflow/Dockerfile
-    container_name: 
+    build: ./orchestration
+    container_name: spdl_airflow
     ports:
-      - "8080:8080"
-    environment:
+      - 8080:8080
+    env_file:
+      - /orchestration/.env
+    # run the shell script I copied into the container at /usr/local/bin/airflow_setup.sh
+    command: bash -c "/usr/local/bin/airflow_setup.sh"
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    restart: unless-stopped
+
+  delta_spark:
+    build: ./spark_delta
+    container_name: spdl_delta_spark
+    ports:
+      - 4040:4040
+      - 8888-8889:8888-8889
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    tty: true
+    env_file:
+      - /spark_delta/.env

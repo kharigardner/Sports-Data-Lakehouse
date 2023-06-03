@@ -9,6 +9,10 @@ __pycache__
 .terraform.lock.hcl
 terraform.tfstate
 *.tfstate.backup
+.env
 
 # JVM shit
 .metals
+
+# any potential data files written by local testing
+*.parquet

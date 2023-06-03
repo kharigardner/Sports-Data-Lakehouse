@@ -89,8 +89,9 @@ def static_data_fetch() -> None:
         gzip=True
     )
 
-def fetch_yearly_data(year: int):
+def fetch_yearly_data(year: typing.Union[int,str]) -> None:
     """Fetch data from the NFL data API for a given year."""
+    year = int(year)
     weekly_data = nfl.import_weekly_data([year])
     snap_counts = nfl.import_snap_counts([year])
     qbr = nfl.import_qbr([year], frequency='weekly')

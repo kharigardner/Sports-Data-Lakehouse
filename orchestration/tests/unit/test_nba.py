@@ -17,19 +17,17 @@ def test_data_fetch_success(mocker: pytest_mock.MockerFixture) -> None:
     mocker.patch('nba_api.stats.static.teams.get_teams', return_value=[{'id': 1, 'full_name': 'Team 1'}, {'id': 2, 'full_name': 'Team 2'}])
 
     # Mock the S3Hook to prevent actual file writes
-    s3_hook_mock = mocker.Mock(spec=S3Hook)
+    mock_s3_load_file = mocker.patch('airflow.providers.amazon.aws.hooks.s3.S3Hook.load_file', return_value=None)
 
-    # Call the function
-    with mocker.patch('airflow.providers.amazon.aws.hooks.s3.S3Hook.load_file', return_value=s3_hook_mock):
-        nba_func.static_data_fetch()
+    nba_func.static_data_fetch()
 
     # Assert that the dataframes were created and saved to parquet files
     assert pd.read_parquet('players.parquet').equals(pd.DataFrame([{'id': 1, 'full_name': 'Player 1'}, {'id': 2, 'full_name': 'Player 2'}]))
     assert pd.read_parquet('teams.parquet').equals(pd.DataFrame([{'id': 1, 'full_name': 'Team 1'}, {'id': 2, 'full_name': 'Team 2'}]))
 
     # Assert that the files were saved to S3
-    s3_hook_mock.load_file.assert_any_call(filename='players.parquet', key='bronze/nba/static/players.parquet', bucket_name='sports-lakehouse', replace=True, gzip=True)
-    s3_hook_mock.load_file.assert_any_call(filename='teams.parquet', key='bronze/nba/static/teams.parquet', bucket_name='sports-lakehouse', replace=True, gzip=True)
+    mock_s3_load_file.assert_any_call(filename='players.parquet', key='bronze/nba/static/players.parquet', bucket_name='sports-lakehouse', replace=True, gzip=True)
+    mock_s3_load_file.assert_any_call(filename='teams.parquet', key='bronze/nba/static/teams.parquet', bucket_name='sports-lakehouse', replace=True, gzip=True)
 
 # Tests that the function handles NBA API being down or unavailable.
 def test_data_fetch_failure(mocker: pytest_mock.MockerFixture) -> None:

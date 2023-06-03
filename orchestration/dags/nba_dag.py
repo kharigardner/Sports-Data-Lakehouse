@@ -1,7 +1,6 @@
 import datetime as dt
 import pandas as pd
-from nba_api.stats.endpoints import *
-from nba_api.stats.static import players, teams
+
 
 from airflow.decorators import dag, task
 from airflow.operators.python import PythonOperator
@@ -56,3 +55,5 @@ def nba_dag():
 
 
     [fetch_static_data(), all_time_leaders()] >> process_games_data(extract_games())
+
+dag = nba_dag() 
